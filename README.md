@@ -15,6 +15,7 @@ explicit `brew tap` step needed.
 
 | Formula | What it is |
 | --- | --- |
+| [`beamup`](./Formula/beamup.rb) | Bidirectional real-time file sync for Teleport Beams. See [webvictim/beamup](https://github.com/webvictim/beamup). |
 | [`prism`](./Formula/prism.rb) | Route local AI traffic (Claude Code, Codex) through a Teleport cluster's managed LLM gateways. See [webvictim/prism](https://github.com/webvictim/prism). |
 
 ## Installing pre-release builds
