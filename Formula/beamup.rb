@@ -1,7 +1,7 @@
 class Beamup < Formula
   desc "Bidirectional real-time file sync for Teleport Beams"
   homepage "https://github.com/webvictim/beamup"
-  license "MIT"
+  license "Apache-2.0"
 
   version "0.1.1"
 
