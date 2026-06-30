@@ -1,8 +1,8 @@
 class Prism < Formula
   desc "Route local AI traffic through Teleport-managed LLM gateways"
   homepage "https://github.com/webvictim/prism"
-  url "https://github.com/webvictim/prism/archive/refs/tags/v0.1.8.tar.gz"
-  sha256 "2635daa978f4a1c5b1ae1abbec42a097c3c6d5f1e9eedd6f23acd8d5f9010503"
+  url "https://github.com/webvictim/prism/archive/refs/tags/v0.1.9.tar.gz"
+  sha256 "958efdbb4cb7028cbc8dc291cb3092a0a489c1497d8cf36bdc5e3109f79c8559"
   license "Apache-2.0"
   head "https://github.com/webvictim/prism.git", branch: "main"
 
