@@ -1,8 +1,8 @@
 class Prism < Formula
   desc "Route local AI traffic through Teleport-managed LLM gateways"
   homepage "https://github.com/webvictim/prism"
-  url "https://github.com/webvictim/prism/archive/refs/tags/v0.1.15.tar.gz"
-  sha256 "24b79f2ab00df37fd8e2f13792053dff6cfd2faa66e8d81ae3cbf1a8e5fef969"
+  url "https://github.com/webvictim/prism/archive/refs/tags/v0.1.16.tar.gz"
+  sha256 "a12556dda3fd3af0fb189ef8ad208428771e9f143add704f39d7b96e1d87e7ef"
   license "Apache-2.0"
   head "https://github.com/webvictim/prism.git", branch: "main"
 
@@ -15,7 +15,8 @@ class Prism < Formula
 
   def caveats
     <<~EOS
-      New in 0.1.15: Forward-proxy mode for Claude Code Remote Control.
+      New in 0.1.16: headless `prism claude rc` now works in
+      forward-proxy mode (Claude Code Remote Control).
       Enable with: prism config set claude_forward_proxy_mode true
 
       Then restart: prism down && prism up
