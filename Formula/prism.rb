@@ -1,8 +1,8 @@
 class Prism < Formula
   desc "Route local AI traffic through Teleport-managed LLM gateways"
   homepage "https://github.com/webvictim/prism"
-  url "https://github.com/webvictim/prism/archive/refs/tags/v0.1.19.tar.gz"
-  sha256 "f5f50e005898b306df9a060104d9724177f716cbeedfb4cddce69c9c83149394"
+  url "https://github.com/webvictim/prism/archive/refs/tags/v0.1.20.tar.gz"
+  sha256 "13cd102580b6357af55343ba1d1806fbdeb18821fb18146eae36229915787d06"
   license "Apache-2.0"
   head "https://github.com/webvictim/prism.git", branch: "main"
 
@@ -15,13 +15,16 @@ class Prism < Formula
 
   def caveats
     <<~EOS
-      New in 0.1.19: OpenAI-compatible clients that only speak
-      /v1/chat/completions (MacWhisper, session summaries) work again —
-      prism translates those requests to the Responses API, which is the
-      only route newer gateways serve OpenAI models on. Disable with
-      `prism config set openai_chat_completions_shim false` for older
-      gateways. `prism test` gains --format/--model/--stream, and
-      `prism pi config` now mirrors Pi's own model catalog.
+      New in 0.1.20: clients that address prism without a /v1 prefix — the
+      Vercel AI SDK, so OpenCode and anything built on it — were proxied
+      but skipped logging, `prism usage` accounting and Bedrock scrubbing
+      entirely. Those requests are now canonicalised, so they show up in
+      `prism logs` and `prism usage` and get scrubbed like every other
+      client. The request log and its token counts are also one line now,
+      with cache counts included:
+
+        POST /v1/messages 200 req=747024B resp=2073B model=claude-opus-5
+        in=2 out=89 cache_read=18807 cache_write=209741 2.721s
 
       Restart after upgrade: prism down && prism up
     EOS
