@@ -3,25 +3,25 @@ class Beamup < Formula
   homepage "https://github.com/webvictim/beamup"
   license "Apache-2.0"
 
-  version "0.1.1"
+  version "0.1.2"
 
   on_macos do
     if Hardware::CPU.arm?
       url "https://github.com/webvictim/beamup/releases/download/v#{version}/beamup-darwin-arm64"
-      sha256 "1e9a1eeaf85c845e3d912218a71a1dda640a54fb48ff44163a5045558733159c"
+      sha256 "67b79ce41d6f1e3c35ca620210ac8b19ec4c759f8cba930e657752aad8db2b98"
     else
       url "https://github.com/webvictim/beamup/releases/download/v#{version}/beamup-darwin-amd64"
-      sha256 "9bde656f9b893fdbe85e9d115556b9698d869d31c1e45ef6b8d4e294164bac5d"
+      sha256 "8710855a86cab1ad71d94c5c6e8bd6cce0aabb932a4944739c8365919ad83140"
     end
   end
 
   on_linux do
     if Hardware::CPU.arm?
       url "https://github.com/webvictim/beamup/releases/download/v#{version}/beamup-linux-arm64"
-      sha256 "579c3a8d5e55ccc82f6d5edb76ffdc5bf22019785376c30800f6494f1e5375df"
+      sha256 "9ff916de20a0108bf3018627921f3b01bb169c1c646cd46934f6c9f6d1a2acd3"
     else
       url "https://github.com/webvictim/beamup/releases/download/v#{version}/beamup-linux-amd64"
-      sha256 "75c970e3d9412363ddb58d83d4357805143c8a7d3abf6497dfaccc0d0aaafdee"
+      sha256 "a2b31cb5ed4ebb1157f3a0c453f6ac6c06e7b61d97e7baf95878f831f8443c8c"
     end
   end
 
