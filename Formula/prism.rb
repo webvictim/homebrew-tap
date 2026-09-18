@@ -1,8 +1,8 @@
 class Prism < Formula
   desc "Route local AI traffic through Teleport-managed LLM gateways"
   homepage "https://github.com/webvictim/prism"
-  url "https://github.com/webvictim/prism/archive/refs/tags/v0.1.20.tar.gz"
-  sha256 "13cd102580b6357af55343ba1d1806fbdeb18821fb18146eae36229915787d06"
+  url "https://github.com/webvictim/prism/archive/refs/tags/v0.1.21.tar.gz"
+  sha256 "0ba5ade32087b2eabc617c531e407a3d18b603445db5a9e2e22f29ad170ae8c2"
   license "Apache-2.0"
   head "https://github.com/webvictim/prism.git", branch: "main"
 
@@ -15,16 +15,12 @@ class Prism < Formula
 
   def caveats
     <<~EOS
-      New in 0.1.20: clients that address prism without a /v1 prefix — the
-      Vercel AI SDK, so OpenCode and anything built on it — were proxied
-      but skipped logging, `prism usage` accounting and Bedrock scrubbing
-      entirely. Those requests are now canonicalised, so they show up in
-      `prism logs` and `prism usage` and get scrubbed like every other
-      client. The request log and its token counts are also one line now,
-      with cache counts included:
-
-        POST /v1/messages 200 req=747024B resp=2073B model=claude-opus-5
-        in=2 out=89 cache_read=18807 cache_write=209741 2.721s
+      New in 0.1.21: `prism pi` and `prism opencode` are now first-class
+      launchers, like `prism claude`. `prism pi` bootstraps a fresh Pi
+      install, rewrites only the model entries it manages — custom
+      providers such as llama-swap are left alone — and honors
+      PI_CODING_AGENT_DIR. Pi's Anthropic models no longer fail with
+      `fallbacks: Extra inputs are not permitted`.
 
       Restart after upgrade: prism down && prism up
     EOS
