@@ -1,8 +1,8 @@
 class Prism < Formula
   desc "Route local AI traffic through Teleport-managed LLM gateways"
   homepage "https://github.com/webvictim/prism"
-  url "https://github.com/webvictim/prism/archive/refs/tags/v0.1.22.tar.gz"
-  sha256 "6bdfab0d97940d39fdb7957af61f9a2929876b8482856095dc3c81d413a914d0"
+  url "https://github.com/webvictim/prism/archive/refs/tags/v0.1.23.tar.gz"
+  sha256 "4da8f45354b9c431be1fee57456c47de93866d84713e0ab485a21354c4d32108"
   license "Apache-2.0"
   head "https://github.com/webvictim/prism.git", branch: "main"
 
@@ -15,13 +15,13 @@ class Prism < Formula
 
   def caveats
     <<~EOS
-      New in 0.1.22: fixes `API Error: 400 ... tool type 'advisor_...' is
-      not supported for this model`, which broke every Claude Code request
-      after its latest update — prism now drops Claude Code's unsupported
-      advisor tool. New anthropic_strip_fields / anthropic_strip_tool_types
-      / openai_strip_fields / openai_strip_tool_types config lists let you
-      drop the next gateway-rejected field or tool yourself, without
-      waiting for a prism release.
+      New in 0.1.23: fixes auto mode refusing every command in newer Claude
+      Code builds ("The server-side auto mode classifier gave no verdict").
+      Claude Code now asks the API to run that check server-side and the
+      gateway never answers, so `prism claude` and `prism env` set
+      CLAUDE_CODE_AUTO_MODE_SERVER=0 to keep it local. Your own value for
+      that variable is respected. Also carries 0.1.22's fix for
+      `tool type 'advisor_...' is not supported for this model`.
 
       Restart after upgrade: prism down && prism up
     EOS
