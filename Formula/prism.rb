@@ -1,8 +1,8 @@
 class Prism < Formula
   desc "Route local AI traffic through Teleport-managed LLM gateways"
   homepage "https://github.com/webvictim/prism"
-  url "https://github.com/webvictim/prism/archive/refs/tags/v0.1.27.tar.gz"
-  sha256 "007fc60e10f79c1aa4d4ca869f96df604721f10404d27b530a7f50ef5c538f22"
+  url "https://github.com/webvictim/prism/archive/refs/tags/v0.1.28.tar.gz"
+  sha256 "47b2fae993b79406a1040be18d501d1b8ac1612cf04a86fc49e610aaa52be446"
   license "Apache-2.0"
   head "https://github.com/webvictim/prism.git", branch: "main"
 
@@ -15,25 +15,26 @@ class Prism < Formula
 
   def caveats
     <<~EOS
-      New in 0.1.27: "prism claude" works on a managed machine whose
-      settings pin Anthropic sign-ins (forceLoginOrgUUID or
-      forceLoginMethod), with no login at all. Such a machine rejects
-      every Anthropic credential Claude Code is given, prism's dummy
-      gateway token included, so Claude Code refused to start -- and
-      dropping the token only moved it to "Not logged in". A pin polices
-      first-party sign-in, so prism now runs Claude Code there as a
-      third-party platform client pointed at the local router, with no
-      credential at all: the shape a Teleport beam uses against the same
-      cluster gateway. Nothing to configure.
+      New in 0.1.28: prism tells you when the cluster gateway served a
+      different model than you asked for. The Teleport LLM app serves
+      only the models its cluster is configured for, and quietly
+      substitutes a fallback for anything else -- the request succeeds,
+      nothing in the response mentions it, and your client keeps
+      reporting (and pricing) the model it asked for. Claude Code's own
+      default, claude-opus-5-5, is missing from some clusters' lists.
 
-      Managed settings that say nothing about sign-ins are unaffected.
-      "prism config set claude_auth platform" asks for the third-party
-      provider outright, for a pin delivered by a route prism cannot
-      read.
+      A substituted call now shows up as
+      "requested=claude-opus-5-5 model=claude-sonnet-5 [!]" in the
+      request log, is counted per pair by "prism usage", and is
+      mentioned once at "prism claude" launch when it happened in the
+      last 24 hours. To learn what your cluster does serve, ask for a
+      model and read the reply's own "model" field back: a name that
+      returns unchanged is served, anything else is the fallback.
 
-      This fix needs no daemon restart -- it is all in the launcher.
-      Run "prism down && prism up" when you want the daemon itself
-      on the new binary.
+      Restart the daemon for this one -- run "prism down && prism up".
+      The "[!]" marker and the "requested=" field are produced by the
+      daemon, so an upgrade alone will not start logging them. The
+      "prism usage" section and the launch-time line work immediately.
     EOS
   end
 
