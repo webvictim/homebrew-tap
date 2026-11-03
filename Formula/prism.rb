@@ -1,8 +1,8 @@
 class Prism < Formula
   desc "Route local AI traffic through Teleport-managed LLM gateways"
   homepage "https://github.com/webvictim/prism"
-  url "https://github.com/webvictim/prism/archive/refs/tags/v0.2.0.tar.gz"
-  sha256 "9869f235c93c304904f239e049177f84991db0de2414bb80885b4febc6012403"
+  url "https://github.com/webvictim/prism/archive/refs/tags/v0.2.1.tar.gz"
+  sha256 "bbf148439353cfd4f446a70688389b74062a696441059d6476c4c4da52301dfb"
   license "Apache-2.0"
   head "https://github.com/webvictim/prism.git", branch: "main"
 
@@ -15,41 +15,35 @@ class Prism < Formula
 
   def caveats
     <<~EOS
-      New in 0.2.0: two commands for when prism stops working.
+      New in 0.2.1: prism tells Teleport which cluster it means, every
+      time. tsh and tctl act on whichever profile your shell last
+      logged into, which is not necessarily the cluster prism is
+      configured for. prism now passes "--proxy" to tsh and
+      "--auth-server" to tctl on every call, so you never have to
+      change your login context to run a prism command.
 
-      "prism doctor" checks everything -- the service definition, the
-      daemon and its router, your Teleport login or the whole tbot
-      chain, and finally a real request through the router -- and
-      prints one report with the fix on each line. It exits non-zero
-      if anything failed, changes nothing, and never prints your
-      registration secret. It is meant to be pasted to whoever is
-      helping you. "prism status" now points at it when something it
-      shows is unhealthy.
+      This mattered most in "prism tbot reset": logged into another
+      cluster, it would have created this machine's bot, role and
+      token there, and the only symptom would have been tbot failing
+      to join at the last step. Its preflight now asks whether you
+      have a live login to prism's own cluster, and names the exact
+      "tsh login --proxy=..." to run if not.
 
-      "prism tbot reset" rebuilds this machine's Machine ID identity
-      from scratch: delete and recreate its bot, role and token in the
-      cluster, clear the local tbot state, restart prism, and send one
-      request to prove it works. Everything is scoped to this
-      machine's hostname, so no other machine is affected. Use
-      "--dry-run" to see the plan first; it needs tctl and a live
-      "tsh login".
+      prism's configured proxy is the authority for which cluster a
+      machine belongs to, so moving a machine to a different cluster
+      is "prism config set proxy <host:port>" followed by
+      "prism tbot reset". Reset says when it is moving a machine
+      rather than repairing one, and leaves the old cluster's
+      resources alone.
 
-      prism also now notices when its tbot identity was copied from
-      another machine -- a Mac cloned with Migration Assistant brings
-      one along, and two machines renewing one bound keypair can lock
-      the bot and break prism on the original. It refuses to start tbot
-      on an identity that is not this machine's and points at
-      "prism tbot reset". The binding is recorded the first time a
-      machine runs 0.2.0, so a clone is only caught if the machine it
-      came from had run this version at least once.
-
-      Also fixed: "prism down --help" used to stop the daemon and
-      "prism uninstall --help" used to remove the service.
+      From 0.2.0, if you have not upgraded yet: "prism doctor" checks
+      everything and prints one report with the fix on each line, and
+      "prism tbot reset" rebuilds a broken Machine ID identity from
+      scratch. prism also refuses to start tbot on an identity copied
+      from another machine, which a Mac cloned with Migration
+      Assistant brings along.
 
       Restart the daemon for this one -- run "prism down && prism up".
-      The clone check runs inside the daemon, and the service
-      definition it rewrites to an upgrade-proof path is repaired on
-      the next "prism up".
     EOS
   end
 
