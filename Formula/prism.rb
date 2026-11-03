@@ -1,8 +1,8 @@
 class Prism < Formula
   desc "Route local AI traffic through Teleport-managed LLM gateways"
   homepage "https://github.com/webvictim/prism"
-  url "https://github.com/webvictim/prism/archive/refs/tags/v0.2.1.tar.gz"
-  sha256 "bbf148439353cfd4f446a70688389b74062a696441059d6476c4c4da52301dfb"
+  url "https://github.com/webvictim/prism/archive/refs/tags/v0.2.2.tar.gz"
+  sha256 "84dd09031a08d5d9c31ed715ac88c0bd41a249265bfb6259faf60f19f505e4e6"
   license "Apache-2.0"
   head "https://github.com/webvictim/prism.git", branch: "main"
 
@@ -15,33 +15,30 @@ class Prism < Formula
 
   def caveats
     <<~EOS
-      New in 0.2.1: prism tells Teleport which cluster it means, every
-      time. tsh and tctl act on whichever profile your shell last
-      logged into, which is not necessarily the cluster prism is
-      configured for. prism now passes "--proxy" to tsh and
-      "--auth-server" to tctl on every call, so you never have to
-      change your login context to run a prism command.
+      New in 0.2.2: "prism tbot reset" fixes a locked bot. When
+      Teleport sees a Machine ID identity renewed out of order, it
+      assumes a stolen certificate and locks the bot's join token
+      ("... locked due to a certificate generation mismatch"). Reset
+      recreates the token under the same name, so it used to fail on
+      that lock at its last step; it now removes the lock as part of
+      the rebuild. A lock someone placed by hand is never removed.
 
-      This mattered most in "prism tbot reset": logged into another
-      cluster, it would have created this machine's bot, role and
-      token there, and the only symptom would have been tbot failing
-      to join at the last step. Its preflight now asks whether you
-      have a live login to prism's own cluster, and names the exact
-      "tsh login --proxy=..." to run if not.
+      Nothing has to have been copied for that to happen: a renewal
+      whose reply was lost while a laptop slept is enough, and so is
+      a tbot left running by a crashed daemon. prism now stops such a
+      leftover tbot before starting its own.
 
-      prism's configured proxy is the authority for which cluster a
-      machine belongs to, so moving a machine to a different cluster
-      is "prism config set proxy <host:port>" followed by
-      "prism tbot reset". Reset says when it is moving a machine
-      rather than repairing one, and leaves the old cluster's
-      resources alone.
+      "prism doctor" reports your tbot's version against the
+      cluster's, and says when the running tbot isn't the installed
+      one. Kimi K2.5, GLM 5 and the GPT models all work from
+      /v1/chat/completions at once. The test requests in "prism test",
+      "prism doctor" and "prism tbot reset" now name claude-sonnet-5
+      by default; "prism config set anthropic_test_model <id>"
+      changes it without a new release.
 
-      From 0.2.0, if you have not upgraded yet: "prism doctor" checks
-      everything and prints one report with the fix on each line, and
-      "prism tbot reset" rebuilds a broken Machine ID identity from
-      scratch. prism also refuses to start tbot on an identity copied
-      from another machine, which a Mac cloned with Migration
-      Assistant brings along.
+      From 0.2.1, if you have not upgraded yet: prism passes the
+      cluster to every tsh and tctl call, so nothing depends on which
+      profile your shell last logged into.
 
       Restart the daemon for this one -- run "prism down && prism up".
     EOS
