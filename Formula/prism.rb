@@ -1,8 +1,8 @@
 class Prism < Formula
   desc "Route local AI traffic through Teleport-managed LLM gateways"
   homepage "https://github.com/webvictim/prism"
-  url "https://github.com/webvictim/prism/archive/refs/tags/v0.2.2.tar.gz"
-  sha256 "84dd09031a08d5d9c31ed715ac88c0bd41a249265bfb6259faf60f19f505e4e6"
+  url "https://github.com/webvictim/prism/archive/refs/tags/v0.3.0.tar.gz"
+  sha256 "932d247b1062b805008c6d987acfda76695132b641259bbe71910da1894b5645"
   license "Apache-2.0"
   head "https://github.com/webvictim/prism.git", branch: "main"
 
@@ -15,30 +15,22 @@ class Prism < Formula
 
   def caveats
     <<~EOS
-      New in 0.2.2: "prism tbot reset" fixes a locked bot. When
-      Teleport sees a Machine ID identity renewed out of order, it
-      assumes a stolen certificate and locks the bot's join token
-      ("... locked due to a certificate generation mismatch"). Reset
-      recreates the token under the same name, so it used to fail on
-      that lock at its last step; it now removes the lock as part of
-      the rebuild. A lock someone placed by hand is never removed.
+      New in 0.3.0: "prism models" shows which models your cluster
+      serves, and "prism codex" now offers only those in Codex's
+      /model picker ("prism config set model_discovery false" turns
+      that off). The daemon keeps a copy of the list, refreshed hourly;
+      on a tbot machine it reads it with a short-lived tbot identity,
+      so no tsh login is needed. Reading the list needs tsh 18.8.3+.
 
-      Nothing has to have been copied for that to happen: a renewal
-      whose reply was lost while a laptop slept is enough, and so is
-      a tbot left running by a crashed daemon. prism now stops such a
-      leftover tbot before starting its own.
+      "prism test" picks its test models from that list, so it passes
+      on a gateway with no default model.
 
-      "prism doctor" reports your tbot's version against the
-      cluster's, and says when the running tbot isn't the installed
-      one. Kimi K2.5, GLM 5 and the GPT models all work from
-      /v1/chat/completions at once. The test requests in "prism test",
-      "prism doctor" and "prism tbot reset" now name claude-sonnet-5
-      by default; "prism config set anthropic_test_model <id>"
-      changes it without a new release.
+      For scripts and apps that wrap prism: "prism status --json",
+      PRISM_QUIET=1 to keep prism off stdout, and PRISM_CLAUDE_BIN
+      (and _CODEX_, _OPENCODE_, _PI_) to run a tool from a set path.
 
-      From 0.2.1, if you have not upgraded yet: prism passes the
-      cluster to every tsh and tctl call, so nothing depends on which
-      profile your shell last logged into.
+      "prism claude" and "prism env" no longer print a model-swap
+      warning at startup; "prism usage" still lists swaps.
 
       Restart the daemon for this one -- run "prism down && prism up".
     EOS
