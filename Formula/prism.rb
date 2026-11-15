@@ -1,8 +1,8 @@
 class Prism < Formula
   desc "Route local AI traffic through Teleport-managed LLM gateways"
   homepage "https://github.com/webvictim/prism"
-  url "https://github.com/webvictim/prism/archive/refs/tags/v0.4.0.tar.gz"
-  sha256 "c9ee8e10170d0f41669a5314d8a435f56f4e3d29d0a3ac89f6f47bfc660e940a"
+  url "https://github.com/webvictim/prism/archive/refs/tags/v0.4.1.tar.gz"
+  sha256 "7f43d27083bea5985c6fe54001b7987e0d3e8eca38b1cc91afa0ee0725d5e884"
   license "Apache-2.0"
   head "https://github.com/webvictim/prism.git", branch: "main"
 
@@ -15,18 +15,15 @@ class Prism < Formula
 
   def caveats
     <<~EOS
-      New in 0.4.0: OpenCode works through prism again. Run
-      "prism setup opencode" (and "prism setup pi" for Pi) to add a
-      "<model> via prism" entry for every model your cluster serves;
-      "prism opencode" and "prism pi" keep them current on launch.
-      --overwrite replaces the file's providers with prism's only.
+      New in 0.4.1: if "prism models" shows no models, it now says why.
+      Usually Teleport's managed updates are running an old tsh (before
+      18.8.3) in place of the one you installed; "prism doctor" names
+      both and the fix, which is normally "tsh login" again.
 
-      "prism pi config" is now "prism setup pi". The old name still
-      works for now, with a notice.
+      "prism claude -p" run from a script no longer puts prism's
+      platform-client note ahead of Claude Code's own errors.
 
-      Kimi and GLM can now run tools, and Pi's GPT models work.
-
-      Restart the daemon for this one -- run "prism down && prism up".
+      No daemon restart needed.
     EOS
   end
 
