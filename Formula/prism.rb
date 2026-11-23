@@ -1,8 +1,8 @@
 class Prism < Formula
   desc "Route local AI traffic through Teleport-managed LLM gateways"
   homepage "https://github.com/webvictim/prism"
-  url "https://github.com/webvictim/prism/archive/refs/tags/v0.4.1.tar.gz"
-  sha256 "7f43d27083bea5985c6fe54001b7987e0d3e8eca38b1cc91afa0ee0725d5e884"
+  url "https://github.com/webvictim/prism/archive/refs/tags/v0.5.0.tar.gz"
+  sha256 "a48fd486836183db67168c492ecf496ed9dd4e079a67a160547919fe753afcca"
   license "Apache-2.0"
   head "https://github.com/webvictim/prism.git", branch: "main"
 
@@ -15,15 +15,15 @@ class Prism < Formula
 
   def caveats
     <<~EOS
-      New in 0.4.1: if "prism models" shows no models, it now says why.
-      Usually Teleport's managed updates are running an old tsh (before
-      18.8.3) in place of the one you installed; "prism doctor" names
-      both and the fix, which is normally "tsh login" again.
+      New in 0.5.0: the tenant's token quota in "prism usage",
+      "prism status" and "prism doctor", read with your tsh login.
 
-      "prism claude -p" run from a script no longer puts prism's
-      platform-client note ahead of Claude Code's own errors.
+      If Claude Code's status line is statusline
+      (ryanclark/tap/statusline), "prism claude" shows the quota there
+      too. "(tsh login expired)" or "(stale)" means run "tsh login"
+      again. "prism setup statusline --remove" undoes it.
 
-      No daemon restart needed.
+      Run "prism down && prism up" so the daemon starts reading it.
     EOS
   end
 
